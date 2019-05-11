@@ -8,12 +8,12 @@ typedef struct Maingmc
 	int y;
 	int w;
 	int h;
-	int graph;
-	int breakgraph;
-	int fall;	//ブロックの状態を管理(0=待機,1=実行,2=終了)
-	int rad;	//ランダムな数値を入れる
-	bool draw;
-	bool breakdraw;
+	int graph;		// ブロック画像
+	int breakgraph;	// 壊れたブロック画像
+	int fall;		// ブロックの状態を管理(0=待機,1=実行,2=終了)
+	int rad;		// ランダムな数値を入れる
+	bool draw;		// 描画するかしないか
+	bool breakdraw;	// 壊れた時の描画をするかしないか
 }Maingmc;
 
 //初期化
@@ -48,4 +48,4 @@ void Game_Title(int *check, int push);	//タイトル画面
 void Game_Play(int *check);				//プレイ中の画面
 void Game_End(int *check, int push);	//リザルト画面
 
-void Test_Debug();
+//void Test_Debug();

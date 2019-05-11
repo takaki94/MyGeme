@@ -3,30 +3,30 @@
 #include "MainGimmick.h"
 #include "bitmapText.h"
 
-int status = TITLE;
-int push;
+int status = TITLE;	// statusをTITLEに設定(TITLE,PLAY,RESLT,END)
+int push;			// ボタンを押したらカウントする変数
 
-// ランチャー(Launcher.exe)呼び出し関数 
-// pathにはLauncher.exeへの相対パスへの文字列を入れる
-void runLauncher(const char* path)
-{
-
-	char fullPathexe[512];
-#pragma warning (disable:4996)
-	sprintf(fullPathexe, "%s%s", path, "Launcher.exe");
-
-	// プロセス起動準備
-	PROCESS_INFORMATION pi = { 0 };
-	STARTUPINFO si = { 0 };
-	si.cb = sizeof(STARTUPINFO);
-
-	CreateProcess(fullPathexe, (LPSTR)"" , NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, path, &si, &pi);
-}
+//// ランチャー(Launcher.exe)呼び出し関数 
+//// pathにはLauncher.exeへの相対パスへの文字列を入れる
+//void runLauncher(const char* path)
+//{
+//
+//	char fullPathexe[512];
+//#pragma warning (disable:4996)
+//	sprintf(fullPathexe, "%s%s", path, "Launcher.exe");
+//
+//	// プロセス起動準備
+//	PROCESS_INFORMATION pi = { 0 };
+//	STARTUPINFO si = { 0 };
+//	si.cb = sizeof(STARTUPINFO);
+//
+//	CreateProcess(fullPathexe, (LPSTR)"" , NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, path, &si, &pi);
+//}
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	ChangeWindowMode(TRUE);
+	ChangeWindowMode(FALSE);		// フルスクリーン
 
 	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
 	{
@@ -44,27 +44,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//Test_Debug();
 
 		
-		while (status == TITLE)
+		while (status == TITLE)		//statusがTITLEなら実行
 		{
 
 			if (CheckHitKey(KEY_INPUT_RETURN))
 			{
-				push++;
+				push++;		// エンターを押したらpushに1を足す
 			}
 			else
 			{
-				push = 0;
+				push = 0;	// エンターを押していなければ0にする
 			}
 
 			Game_Title(&status, push);
+			// ゲームタイトル読み込み、エンターを押しているか押していないかを渡す
 		}
 		
 
 		while (status == PLAY)
 		{
-			if (CheckHitKey(KEY_INPUT_ESCAPE))		// ＥＳＣキーが押されていたらループから抜ける
+			if (CheckHitKey(KEY_INPUT_ESCAPE))
 			{
-				status = END;
+				status = END;		// ＥＳＣキーが押されていたらループから抜ける
 			}
 
 			if (ProcessMessage() != 0)
@@ -86,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			//Maingmc_Delete();
 
-			Game_Play(&status);
+			Game_Play(&status);	// ゲームステータス判定
 		}
 
 		while (status == RESULT)
@@ -94,22 +95,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			if (CheckHitKey(KEY_INPUT_RETURN))
 			{
-				push++;
+				push++;		// エンターを押したらpushに1を足す
 			}
 			else
 			{
-				push = 0;
+				push = 0;	// エンターを押していなければ0にする
 			}
 
 			Game_End(&status, push);
+			// リザルト画面読み込み、エンターを押しているか押していないかを渡す
 		}
 
 		if (status == END)
 		{
-			break;
+			break;		// statusがENDなら、ゲームループを抜ける
 		}
 	}
 		DxLib_End();				// ＤＸライブラリ使用の終了処理
-		runLauncher("../../");
+		//runLauncher("../../");
 	return 0;				// ソフトの終了 
 }

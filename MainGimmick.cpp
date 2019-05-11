@@ -3,13 +3,13 @@
 #include "bitmapText.h"
 #pragma warning(disable:4996)
 
-Maingmc mainGmc1[MAX_GRAPH];
-Maingmc mainGmc2[MAX_GRAPH];
-Maingmc mainGmcMap[MAP_Y][MAP_X];
-Maingmc backup;
-int blockImg[5];		//ブロック画像
-int blockBreakImg[5];	//ブロックが壊れた時の画像
-int mapImg[9];			//背景マップの画像
+Maingmc mainGmc1[MAX_GRAPH];		// ブロック1
+Maingmc mainGmc2[MAX_GRAPH];		// ブロック2
+Maingmc mainGmcMap[MAP_Y][MAP_X];	// 設置後のブロック
+Maingmc backup;						// ブロック順序入れ替え用
+int blockImg[5];					//ブロック画像
+int blockBreakImg[5];				//ブロックが壊れた時の画像
+int mapImg[9];						//背景マップの画像
 
 //背景マップ配列
 int map[MAP_Y][MAP_X] =
@@ -36,7 +36,7 @@ int yh;								//yとhをかけた数値を保存
 int xw;								//xとwをかけた数値を保存
 bool loop = false;					//消す判定を繰り返すかどうかの判定
 
-BitmapText text;
+BitmapText text;					// テキスト用
 //BitmapText textjp;
 
 int score = MAX_GRAPH * 2;			//残りブロックのカウント
@@ -98,6 +98,7 @@ void Maingmc_Init()
 	{
 		for (int j = 0; j < MAP_X; j++)
 		{
+			// すべて初期化
 			blockcol[i][j] = 0 ;
 			mainGmcMap[i][j].x = 0;
 			mainGmcMap[i][j].y = 0;
@@ -112,12 +113,15 @@ void Maingmc_Init()
 		}
 	}
 
+	// 最初のブロックを落下可能状態に
 	mainGmc1[0].fall = 1;
 	mainGmc2[0].fall = 1;
 	mainGmc1[0].draw = true;
 	mainGmc2[0].draw = true;
+	// スコアの初期化
 	score = MAX_GRAPH * 2 - 2;
 
+	// テキスト画像読み込み
 	text.setFontImage(16, 6, "image/font.bmp");
 	text.reMapText(" !\"#$%%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\tabcdefghijklmnopqrstuvwxyz{|}\\");
 
@@ -129,11 +133,11 @@ void Maingmc_Update()
 	{
 		if (mainGmc1[i].fall == 1)
 		{
-			mainGmc1[i].y += grv;
+			mainGmc1[i].y += grv;		// ブロックを落下
 		}
 		if (mainGmc2[i].fall == 1)
 		{
-			mainGmc2[i].y += grv;
+			mainGmc2[i].y += grv;		// ブロックを落下
 		}
 		if (mainGmc1[i].fall == 1 && mainGmc2[i].fall == 1)
 		{
@@ -213,19 +217,23 @@ void Maingmc_Update()
 				}
 				else if (CheckHitKey(KEY_INPUT_LEFT) != 1 && CheckHitKey(KEY_INPUT_RIGHT) != 1)
 				{
+					// どちらのキーも押されていない場合、pushkeyをリセット
 					pushkey = 0;
 				}
 
 				if (CheckHitKey(KEY_INPUT_S) == 1)
 				{
+					// Sキーが押されていれば
 					pushkey2++;
 					if (pushkey2 == 1)
 					{
+						// pushkey2が1の場合にブロックを入れ替える
 						Shuffle(&mainGmc1[i], &mainGmc2[i]);
 					}
 				}
 				else
 				{
+					// Sキーが押されていなければリセット
 					pushkey2 = 0;
 				}
 				
@@ -242,7 +250,7 @@ void Maingmc_HitCheck()
 		{
 			yh = mainGmc1[i].y / mainGmc1[i].h;
 			xw = (mainGmc1[i].x - leftmax) / mainGmc1[i].w;
-			if (mainGmc1[i].y >= 352 || blockcol[(mainGmc1[i].y + mainGmc1[i].h) / mainGmc1[i].h][(mainGmc1[i].x - leftmax + mainGmc1[i].w / 2) / mainGmc1[i].w] != 0)
+			if (mainGmc1[i].y >= rightmax || blockcol[(mainGmc1[i].y + mainGmc1[i].h) / mainGmc1[i].h][(mainGmc1[i].x - leftmax + mainGmc1[i].w / 2) / mainGmc1[i].w] != 0)
 			{
 				mainGmc1[i].x = xw * mainGmc1[i].w + leftmax;
 				mainGmc1[i].y = yh * mainGmc1[i].h;
@@ -271,7 +279,7 @@ void Maingmc_HitCheck()
 		{
 			yh = mainGmc2[i].y / mainGmc2[i].h;
 			xw = (mainGmc2[i].x - leftmax) / mainGmc2[i].w;
-			if (mainGmc2[i].y >= 352 || blockcol[(mainGmc2[i].y + mainGmc2[i].h) / mainGmc2[i].h][(mainGmc2[i].x - leftmax + mainGmc2[i].w / 2) / mainGmc2[i].w] != 0)
+			if (mainGmc2[i].y >= rightmax || blockcol[(mainGmc2[i].y + mainGmc2[i].h) / mainGmc2[i].h][(mainGmc2[i].x - leftmax + mainGmc2[i].w / 2) / mainGmc2[i].w] != 0)
 			{
 				mainGmc2[i].x = xw * mainGmc2[i].w + leftmax;
 				mainGmc2[i].y = yh * mainGmc2[i].h;
@@ -341,11 +349,11 @@ void Maingmc_Draw()
 		{
 			if (mainGmcMap[i][j].draw == true)
 			{
-				DrawGraph(mainGmcMap[i][j].x, i * 32, mainGmcMap[i][j].graph, TRUE);
+				DrawGraph(mainGmcMap[i][j].x, i * GRAPH_H, mainGmcMap[i][j].graph, TRUE);
 			}
 			if (mainGmcMap[i][j].breakdraw == true)
 			{
-				DrawGraph(mainGmcMap[i][j].x, i * 32, mainGmcMap[i][j].breakgraph, TRUE);
+				DrawGraph(mainGmcMap[i][j].x, i * GRAPH_H, mainGmcMap[i][j].breakgraph, TRUE);
 			}
 		}
 	}
