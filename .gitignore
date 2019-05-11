@@ -1,0 +1,9 @@
+Debug/fall.obj
+Debug/
+MyGame01.vcxproj.user
+Log.txt
+.vs/
+*.db
+*.pdb
+*.ilk
+*.exe
