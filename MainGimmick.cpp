@@ -162,14 +162,14 @@ void MaingmcUpdate()
 						}
 					}
 					//もし左端まで到達したら
-					if (mainGmc1[i].x <= leftmax)
+					if (mainGmc1[i].x <= leftMax)
 					{
-						mainGmc1[i].x = leftmax;
+						mainGmc1[i].x = leftMax;
 					}
 					//もし左端まで到達したら
-					if (mainGmc2[i].x <= leftmax)
+					if (mainGmc2[i].x <= leftMax)
 					{
-						mainGmc2[i].x = leftmax;
+						mainGmc2[i].x = leftMax;
 					}
 					//もし左側に既にブロックがあったら
 					if (blockcol[mainGmc1[i].y / mainGmc1[i].h][mainGmc1[i].x / mainGmc1[i].w] != 0)
@@ -195,14 +195,14 @@ void MaingmcUpdate()
 						}
 					}
 					//もし右端まで到達したら
-					if (mainGmc1[i].x >= rightmax)
+					if (mainGmc1[i].x >= rightMax)
 					{
-						mainGmc1[i].x = rightmax;
+						mainGmc1[i].x = rightMax;
 					}
 					//もし右端まで到達したら
-					if (mainGmc2[i].x >= rightmax)
+					if (mainGmc2[i].x >= rightMax)
 					{
-						mainGmc2[i].x = rightmax;
+						mainGmc2[i].x = rightMax;
 					}
 					//もし右側に既にブロックがあったら
 					if (blockcol[mainGmc1[i].y / mainGmc1[i].h][mainGmc1[i].x / mainGmc1[i].w] != 0)
@@ -248,18 +248,19 @@ void MaingmcHitCheck()
 	{
 		if (mainGmc1[i].fall == 1)
 		{
-			yh = mainGmc1[i].y / mainGmc1[i].h;
-			xw = (mainGmc1[i].x - leftmax) / mainGmc1[i].w;
-			if (mainGmc1[i].y >= floor || blockcol[(mainGmc1[i].y + mainGmc1[i].h) / mainGmc1[i].h][(mainGmc1[i].x - leftmax + mainGmc1[i].w / 2) / mainGmc1[i].w] != 0)
+			yh = mainGmc1[i].y / mainGmc1[i].h;					// 行の数値に変換
+			xw = (mainGmc1[i].x - leftMax) / mainGmc1[i].w;		// 列の数値に変換
+			if (mainGmc1[i].y >= floor || blockcol[(mainGmc1[i].y + mainGmc1[i].h) / mainGmc1[i].h][(mainGmc1[i].x - leftMax + mainGmc1[i].w / 2) / mainGmc1[i].w] != 0)
 			{	// ブロックが枠の一番下、もしくはブロックが既に設置してある場所場で到達したとき
-				mainGmc1[i].x = xw * mainGmc1[i].w + leftmax;
-				mainGmc1[i].y = yh * mainGmc1[i].h;
-				mainGmc1[i].fall = 2;
-				blockcol[yh][xw] = mainGmc1[i].rad;
-				mainGmc1[i].draw = false;
+				mainGmc1[i].x = xw * mainGmc1[i].w + leftMax;	// X座標の位置を確定(列×画像の幅+左端の数値)
+				mainGmc1[i].y = yh * mainGmc1[i].h;				// Y座標の位置を確定(行×画像の高さ)
+				mainGmc1[i].fall = 2;							// fallの値を2(落下しない)に変更
+				blockcol[yh][xw] = mainGmc1[i].rad;				// ブロックの種類を保存
+				mainGmc1[i].draw = false;						// mainGmc1を描画しない
 
-				stock--;
+				stock--;										// 残りブロックを減らす
 
+				// mainGmc1の中に入っている変数をすべて設置後の構造体へ入れる
 				mainGmcMap[yh][xw].x = mainGmc1[i].x;
 				mainGmcMap[yh][xw].y = mainGmc1[i].y;
 				mainGmcMap[yh][xw].w = mainGmc1[i].w;
@@ -270,25 +271,26 @@ void MaingmcHitCheck()
 				mainGmcMap[yh][xw].draw = true;
 				if(mainGmc2[i].fall == 2)
 				{
-					MaingmcDelete2();
+					MaingmcDelete2();	// 同時に落ちているブロックも設置済みなら消去判定を行う
 				}
 			}
 		}
 
 		if (mainGmc2[i].fall == 1)
 		{
-			yh = mainGmc2[i].y / mainGmc2[i].h;
-			xw = (mainGmc2[i].x - leftmax) / mainGmc2[i].w;
-			if (mainGmc2[i].y >= floor || blockcol[(mainGmc2[i].y + mainGmc2[i].h) / mainGmc2[i].h][(mainGmc2[i].x - leftmax + mainGmc2[i].w / 2) / mainGmc2[i].w] != 0)
+			yh = mainGmc2[i].y / mainGmc2[i].h;					// 行の数値に変換
+			xw = (mainGmc2[i].x - leftMax) / mainGmc2[i].w;		// 列の数値に変換
+			if (mainGmc2[i].y >= floor || blockcol[(mainGmc2[i].y + mainGmc2[i].h) / mainGmc2[i].h][(mainGmc2[i].x - leftMax + mainGmc2[i].w / 2) / mainGmc2[i].w] != 0)
 			{	// ブロックが枠の一番下、もしくはブロックが既に設置してある場所場で到達したとき
-				mainGmc2[i].x = xw * mainGmc2[i].w + leftmax;
-				mainGmc2[i].y = yh * mainGmc2[i].h;
-				mainGmc2[i].fall = 2;
-				blockcol[yh][xw] = mainGmc2[i].rad;
-				mainGmc2[i].draw = false;
+				mainGmc2[i].x = xw * mainGmc2[i].w + leftMax;	// X座標の位置を確定(列×画像の幅+左端の数値)
+				mainGmc2[i].y = yh * mainGmc2[i].h;				// Y座標の位置を確定(行×画像の高さ)
+				mainGmc2[i].fall = 2;							// fallの値を2(落下しない)に変更
+				blockcol[yh][xw] = mainGmc2[i].rad;				// ブロックの種類を保存
+				mainGmc2[i].draw = false;						// mainGmc2を描画しない
 
-				stock--;
+				stock--;										// 残りブロックを減らす
 
+				// mainGmc2の中に入っている変数をすべて設置後の構造体へ入れる
 				mainGmcMap[yh][xw].x = mainGmc2[i].x;
 				mainGmcMap[yh][xw].y = mainGmc2[i].y;
 				mainGmcMap[yh][xw].w = mainGmc2[i].w;
@@ -299,7 +301,7 @@ void MaingmcHitCheck()
 				mainGmcMap[yh][xw].draw = true;
 				if(mainGmc1[i].fall == 2)
 				{
-					MaingmcDelete2();
+					MaingmcDelete2();	// 同時に落ちているブロックも設置済みなら消去判定を行う
 				}
 			}
 		}
@@ -307,7 +309,7 @@ void MaingmcHitCheck()
 		
 	
 		if ((mainGmc1[i].fall == 2 && mainGmc2[i].fall == 2) && (mainGmc1[i + 1].fall == 0 && mainGmc2[i + 1].fall == 0))
-		{
+		{	// 現在落下しているブロックの設置が終了し、次のブロックが待機中なら、次のブロックを落下させる
 			mainGmc1[i + 1].fall = 1;
 			mainGmc2[i + 1].fall = 1;
 			mainGmc1[i + 1].draw = true;
@@ -322,12 +324,12 @@ void MaingmcDraw()
 {
 
 	ClearDrawScreen();
-
+	
 	for (int i = 0; i < MAP_Y; i++)
 	{
 		for (int j = 0; j < MAP_X; j++)
 		{
-			DrawGraph(j * GRAPH_H + leftmax, i * GRAPH_H, mapImg[map[i][j]], TRUE);
+			DrawGraph(j * GRAPH_H + leftMax, i * GRAPH_H, mapImg[map[i][j]], TRUE);
 		}
 	}
 
@@ -382,16 +384,16 @@ void MaingmcDelete2()
 		for (int j = 0; j < MAP_X; j++)
 		{
 			if (blockcol[i][j] != 0)
-			{
+			{	// ブロックが設置してあれば
 				if (cntup = CheckLinkRIGHT(j, i, blockcol) >= 3)
-				{
-					mainGmcMap[i][j].draw = false;
-					mainGmcMap[i][j].breakdraw = true;
+				{	// 横に3個以上同じ色があれば
+					mainGmcMap[i][j].draw = false;		// 通常描画をしない
+					mainGmcMap[i][j].breakdraw = true;	// 破壊時の描画をする
 				}
 				if(cntup = CheckLinkUP(j, i, blockcol) >= 3)
-				{
-					mainGmcMap[i][j].draw = false;
-					mainGmcMap[i][j].breakdraw = true;
+				{	// 縦に3個以上同じ色があれば
+					mainGmcMap[i][j].draw = false;		// 通常描画をしない
+					mainGmcMap[i][j].breakdraw = true;	// 破壊時の描画をする
 				}
 			}
 		}
@@ -402,7 +404,7 @@ void MaingmcDelete2()
 		{
 			if (mainGmcMap[i][j].draw == false)
 			{
-				blockcol[i][j] = 0;
+				blockcol[i][j] = 0;	// 設置されていない場所を消去
 			}
 		}
 	}
@@ -418,14 +420,14 @@ void MaingmcDelete2()
 		for (int j = 0; j < MAP_X; j++)
 		{
 			if (mainGmcMap[i][j].draw == false)
-			{
-				FallGraph(mainGmcMap, blockcol, i, j);
+			{	
+				FallGraph(mainGmcMap, blockcol, i, j);		// ブロックの下に空白があれば下に落とす
 				if (cntup = CheckLinkRIGHT(j, i, blockcol) >= 3 && blockcol[i][j] != 0)
-				{
+				{	// 落とした後に横に3個以上つながっている場所があれば
 					loop = true;
 				}
 				if (cntup = CheckLinkUP(j, i, blockcol) >= 3 && blockcol[i][j] != 0)
-				{
+				{	// 落とした後に縦に3個以上つながっている場所があれば
 					loop = true;
 				}
 			}
@@ -435,7 +437,7 @@ void MaingmcDelete2()
 	if (loop == true)
 	{
 		WaitTimer(300);
-		MaingmcDelete2();
+		MaingmcDelete2();	// もう一度この関数を回す
 	}
 
 	for (int i = 0; i < MAP_Y; i++)
@@ -450,6 +452,7 @@ void MaingmcDelete2()
 
 void Shuffle(Maingmc *p, Maingmc *p2)
 {
+	// Sが押されたら上下の色を変える
 	backup.rad = p->rad;
 	backup.graph = blockImg[p->rad - 1];
 	backup.breakgraph = blockBreakImg[p->rad - 1];
@@ -465,7 +468,8 @@ void Shuffle(Maingmc *p, Maingmc *p2)
 
 void TextDraw()
 {
-	
+	// テキストの描画(矢野先生のテキスト描画関数を引用)
+
 	char buf[128];
 	if(stock >= 0)
 	{
