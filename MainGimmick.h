@@ -17,35 +17,35 @@ typedef struct Maingmc
 }Maingmc;
 
 //初期化
-void Maingmc_Init();
+void MaingmcInit();
 //アップデート
-void Maingmc_Update();
+void MaingmcUpdate();
 //ブロックの状態更新
-void Maingmc_HitCheck();
+void MaingmcHitCheck();
 //描画
-void Maingmc_Draw();
+void MaingmcDraw();
 //ポーズ機能
-void Maingmc_Pause();
+void MaingmcPause();
 //ブロックを消す機能
-void Maingmc_Delete2();
+void MaingmcDelete2();
 
-int Check_Link_RIGHT(int x, int y, int num[][MAP_X]);			//右側の隣接判定(1回目)
-int Check_Link_RIGHT2(int x, int y, int num[][MAP_X], int cnt);	//右側の隣接判定(2回目以降)
-int Check_Link_LEFT(int x, int y, int num[][MAP_X], int cnt);	//左側の隣接判定
-//int Check_Link_UP(int x, int y, int num[][MAP_X], int cnt);
-int Check_Link_UP(int x, int y, int num[][MAP_X]);				//上の隣接判定(1回目)
-int	Check_Link_UP2(int x, int y, int num[][MAP_X], int cnt);	//上の隣接判定(2回目以降)
-int Check_Link_DOWN(int x, int y, int num[][MAP_X], int cnt);	//下の隣接判定
+int CheckLinkRIGHT(int x, int y, int num[][MAP_X]);					//右側の隣接判定(1回目)
+int CheckLinkRIGHT2(int x, int y, int num[][MAP_X], int cnt);		//右側の隣接判定(2回目以降)
+int CheckLinkLEFT(int x, int y, int num[][MAP_X], int cnt);			//左側の隣接判定
+//int CheckLinkUP(int x, int y, int num[][MAP_X], int cnt);
+int CheckLinkUP(int x, int y, int num[][MAP_X]);					//上の隣接判定(1回目)
+int	CheckLinkUP2(int x, int y, int num[][MAP_X], int cnt);			//上の隣接判定(2回目以降)
+int CheckLinkDOWN(int x, int y, int num[][MAP_X], int cnt);			//下の隣接判定
 
-void Fall_Graph(Maingmc p[][MAP_X], int num[][MAP_X], int y, int x);	//消した後に上のブロックを落とす関数
+void FallGraph(Maingmc p[][MAP_X], int num[][MAP_X], int y, int x);	//消した後に上のブロックを落とす関数
 
-void Shuffle(Maingmc *p, Maingmc *p2);	//Sを押したら上下を入れ替える関数
+void Shuffle(Maingmc *p, Maingmc *p2);								//Sを押したら上下を入れ替える関数
 
-void Text_Draw();	//文字の描画
+void TextDraw();													//文字の描画
 
 
-void Game_Title(int *check, int push);	//タイトル画面
-void Game_Play(int *check);				//プレイ中の画面
-void Game_End(int *check, int push);	//リザルト画面
+void GameTitle(int *check, int push);	//タイトル画面
+void GamePlay(int *check);				//プレイ中の画面
+void GameEnd(int *check, int push);		//リザルト画面
 
 //void Test_Debug();

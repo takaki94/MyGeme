@@ -1,6 +1,6 @@
 #include "MainGimmick.h"
 
-void Fall_Graph(Maingmc p[][MAP_X], int num[][MAP_X], int y, int x)
+void FallGraph(Maingmc p[][MAP_X], int num[][MAP_X], int y, int x)
 {
 	int cnt = 0;
 	int yi = 0;

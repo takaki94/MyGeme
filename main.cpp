@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	while (gameloop)
 	{
 
-		Maingmc_Init();	//ブロック情報の初期化
+		MaingmcInit();	//ブロック情報の初期化
 
 		//Test_Debug();
 
@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				push = 0;	// エンターを押していなければ0にする
 			}
 
-			Game_Title(&status, push);
+			GameTitle(&status, push);
 			// ゲームタイトル読み込み、エンターを押しているか押していないかを渡す
 		}
 		
@@ -75,19 +75,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			if (CheckHitKey(KEY_INPUT_P))			// Ｐが押されていたら停止（Ｗで解除）
 			{
-				Maingmc_Pause();
+				MaingmcPause();
 			}
 
-			Maingmc_Update();	// ブロック情報の更新
+			MaingmcUpdate();	// ブロック情報の更新
 
-			Maingmc_HitCheck();	//ブロック同士の当たり判定
+			MaingmcHitCheck();	//ブロック同士の当たり判定
 
 
-			Maingmc_Draw();	//ブロックの描画
+			MaingmcDraw();	//ブロックの描画
 
-			//Maingmc_Delete();
+			//MaingmcDelete();
 
-			Game_Play(&status);	// ゲームステータス判定
+			GamePlay(&status);	// ゲームステータス判定
 		}
 
 		while (status == RESULT)
@@ -102,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				push = 0;	// エンターを押していなければ0にする
 			}
 
-			Game_End(&status, push);
+			GameEnd(&status, push);
 			// リザルト画面読み込み、エンターを押しているか押していないかを渡す
 		}
 

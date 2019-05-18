@@ -39,14 +39,14 @@ bool loop = false;					//消す判定を繰り返すかどうかの判定
 BitmapText text;					// テキスト用
 //BitmapText textjp;
 
-int score = MAX_GRAPH * 2;			//残りブロックのカウント
+int stock = MAX_GRAPH * 2;			//残りブロックのカウント
 
 int scorecnt = 0;					//スコア
 
 int TitleImage;						//タイトル画面の画像
 int ResultImg;						//リザルト画面の画像
 
-void Maingmc_Init()
+void MaingmcInit()
 {
 	//画像を読み込み
 	LoadDivGraph("image/test2.png", 5, 5, 1, 32, 32, blockImg);
@@ -118,8 +118,8 @@ void Maingmc_Init()
 	mainGmc2[0].fall = 1;
 	mainGmc1[0].draw = true;
 	mainGmc2[0].draw = true;
-	// スコアの初期化
-	score = MAX_GRAPH * 2 - 2;
+	// 残りブロック数の初期化
+	stock = MAX_GRAPH * 2 - 2;
 
 	// テキスト画像読み込み
 	text.setFontImage(16, 6, "image/font.bmp");
@@ -127,7 +127,7 @@ void Maingmc_Init()
 
 }
 
-void Maingmc_Update()
+void MaingmcUpdate()
 {
 	for (int i = 0; i < MAX_GRAPH; i++)
 	{
@@ -242,7 +242,7 @@ void Maingmc_Update()
 	}
 }
 
-void Maingmc_HitCheck()
+void MaingmcHitCheck()
 {
 	for (int i = 0; i < MAX_GRAPH; i++)
 	{
@@ -250,15 +250,15 @@ void Maingmc_HitCheck()
 		{
 			yh = mainGmc1[i].y / mainGmc1[i].h;
 			xw = (mainGmc1[i].x - leftmax) / mainGmc1[i].w;
-			if (mainGmc1[i].y >= rightmax || blockcol[(mainGmc1[i].y + mainGmc1[i].h) / mainGmc1[i].h][(mainGmc1[i].x - leftmax + mainGmc1[i].w / 2) / mainGmc1[i].w] != 0)
-			{
+			if (mainGmc1[i].y >= floor || blockcol[(mainGmc1[i].y + mainGmc1[i].h) / mainGmc1[i].h][(mainGmc1[i].x - leftmax + mainGmc1[i].w / 2) / mainGmc1[i].w] != 0)
+			{	// ブロックが枠の一番下、もしくはブロックが既に設置してある場所場で到達したとき
 				mainGmc1[i].x = xw * mainGmc1[i].w + leftmax;
 				mainGmc1[i].y = yh * mainGmc1[i].h;
 				mainGmc1[i].fall = 2;
 				blockcol[yh][xw] = mainGmc1[i].rad;
 				mainGmc1[i].draw = false;
 
-				score--;
+				stock--;
 
 				mainGmcMap[yh][xw].x = mainGmc1[i].x;
 				mainGmcMap[yh][xw].y = mainGmc1[i].y;
@@ -270,7 +270,7 @@ void Maingmc_HitCheck()
 				mainGmcMap[yh][xw].draw = true;
 				if(mainGmc2[i].fall == 2)
 				{
-					Maingmc_Delete2();
+					MaingmcDelete2();
 				}
 			}
 		}
@@ -279,15 +279,15 @@ void Maingmc_HitCheck()
 		{
 			yh = mainGmc2[i].y / mainGmc2[i].h;
 			xw = (mainGmc2[i].x - leftmax) / mainGmc2[i].w;
-			if (mainGmc2[i].y >= rightmax || blockcol[(mainGmc2[i].y + mainGmc2[i].h) / mainGmc2[i].h][(mainGmc2[i].x - leftmax + mainGmc2[i].w / 2) / mainGmc2[i].w] != 0)
-			{
+			if (mainGmc2[i].y >= floor || blockcol[(mainGmc2[i].y + mainGmc2[i].h) / mainGmc2[i].h][(mainGmc2[i].x - leftmax + mainGmc2[i].w / 2) / mainGmc2[i].w] != 0)
+			{	// ブロックが枠の一番下、もしくはブロックが既に設置してある場所場で到達したとき
 				mainGmc2[i].x = xw * mainGmc2[i].w + leftmax;
 				mainGmc2[i].y = yh * mainGmc2[i].h;
 				mainGmc2[i].fall = 2;
 				blockcol[yh][xw] = mainGmc2[i].rad;
 				mainGmc2[i].draw = false;
 
-				score--;
+				stock--;
 
 				mainGmcMap[yh][xw].x = mainGmc2[i].x;
 				mainGmcMap[yh][xw].y = mainGmc2[i].y;
@@ -299,7 +299,7 @@ void Maingmc_HitCheck()
 				mainGmcMap[yh][xw].draw = true;
 				if(mainGmc1[i].fall == 2)
 				{
-					Maingmc_Delete2();
+					MaingmcDelete2();
 				}
 			}
 		}
@@ -318,7 +318,7 @@ void Maingmc_HitCheck()
 	}
 }
 
-void Maingmc_Draw()
+void MaingmcDraw()
 {
 
 	ClearDrawScreen();
@@ -359,12 +359,12 @@ void Maingmc_Draw()
 	}
 
 
-	Text_Draw();	//文字の描画
+	TextDraw();	//文字の描画
 
 	ScreenFlip();
 }
 
-void Maingmc_Pause()
+void MaingmcPause()
 {
 	while (1)
 	{
@@ -375,7 +375,7 @@ void Maingmc_Pause()
 	}
 }
 
-void Maingmc_Delete2()
+void MaingmcDelete2()
 {
 	for (int i = 0; i < MAP_Y; i++)
 	{
@@ -383,12 +383,12 @@ void Maingmc_Delete2()
 		{
 			if (blockcol[i][j] != 0)
 			{
-				if (cntup = Check_Link_RIGHT(j, i, blockcol) >= 3)
+				if (cntup = CheckLinkRIGHT(j, i, blockcol) >= 3)
 				{
 					mainGmcMap[i][j].draw = false;
 					mainGmcMap[i][j].breakdraw = true;
 				}
-				if(cntup = Check_Link_UP(j, i, blockcol) >= 3)
+				if(cntup = CheckLinkUP(j, i, blockcol) >= 3)
 				{
 					mainGmcMap[i][j].draw = false;
 					mainGmcMap[i][j].breakdraw = true;
@@ -407,7 +407,7 @@ void Maingmc_Delete2()
 		}
 	}
 
-	Maingmc_Draw();
+	MaingmcDraw();
 
 	WaitTimer(300);
 
@@ -419,12 +419,12 @@ void Maingmc_Delete2()
 		{
 			if (mainGmcMap[i][j].draw == false)
 			{
-				Fall_Graph(mainGmcMap, blockcol, i, j);
-				if (cntup = Check_Link_RIGHT(j, i, blockcol) >= 3 && blockcol[i][j] != 0)
+				FallGraph(mainGmcMap, blockcol, i, j);
+				if (cntup = CheckLinkRIGHT(j, i, blockcol) >= 3 && blockcol[i][j] != 0)
 				{
 					loop = true;
 				}
-				if (cntup = Check_Link_UP(j, i, blockcol) >= 3 && blockcol[i][j] != 0)
+				if (cntup = CheckLinkUP(j, i, blockcol) >= 3 && blockcol[i][j] != 0)
 				{
 					loop = true;
 				}
@@ -435,7 +435,7 @@ void Maingmc_Delete2()
 	if (loop == true)
 	{
 		WaitTimer(300);
-		Maingmc_Delete2();
+		MaingmcDelete2();
 	}
 
 	for (int i = 0; i < MAP_Y; i++)
@@ -463,13 +463,13 @@ void Shuffle(Maingmc *p, Maingmc *p2)
 	p2->breakgraph = blockBreakImg[backup.rad - 1];
 }
 
-void Text_Draw()
+void TextDraw()
 {
 	
 	char buf[128];
-	if(score >= 0)
+	if(stock >= 0)
 	{
-		sprintf(buf, "stock : %d", score);
+		sprintf(buf, "stock : %d", stock);
 	}
 	else
 	{
@@ -484,7 +484,7 @@ void Text_Draw()
 }
 
 
-void Game_Title(int *check, int push)
+void GameTitle(int *check, int push)
 {
 	if (CheckHitKey(KEY_INPUT_ESCAPE))		// ＥＳＣキーが押されていたらループから抜ける
 	{
@@ -516,19 +516,19 @@ void Game_Title(int *check, int push)
 	ScreenFlip();
 }
 
-void Game_Play(int * check)
+void GamePlay(int * check)
 {
 	if (blockcol[0][2] != 0)
 	{
 		*check = RESULT;
 	}
-	if (score < 0)
+	if (stock < 0)
 	{
 		*check = RESULT;
 	}
 }
 
-void Game_End(int * check, int push)
+void GameEnd(int * check, int push)
 {
 	if (CheckHitKey(KEY_INPUT_ESCAPE))		// ＥＳＣキーが押されていたらループから抜ける
 	{
@@ -541,9 +541,9 @@ void Game_End(int * check, int push)
 	//描画初期化
 	ClearDrawScreen();
 
-	if (score > 0)
+	if (stock > 0)
 	{
-		scorecnt = MAX_GRAPH * 2 - score - 2;
+		scorecnt = MAX_GRAPH * 2 - stock - 2;
 	}
 	else
 	{
